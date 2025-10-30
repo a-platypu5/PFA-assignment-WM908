@@ -124,9 +124,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h" />
+    <ClInclude Include="TileClass.h" />
+    <ClInclude Include="TileSetClass.h" />
+    <ClInclude Include="WorldClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MapGen.cpp" />
+    <ClCompile Include="TileClass.cpp" />
+    <ClCompile Include="TileSetClass.cpp" />
+    <ClCompile Include="WorldClass.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

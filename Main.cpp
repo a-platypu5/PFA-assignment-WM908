@@ -1,5 +1,7 @@
 #include <iostream>
-#include "GamesEngineeringBase.h"
+#include "TileClass.h"
+#include "TileSetClass.h"
+#include "WorldClass.h"
 
 using namespace std;
 
@@ -115,12 +117,32 @@ public:
 class pattack : public entity {
     int n = 0;
     int frameTimer = 0;
+    int speed = 8;
+    int px, py;
+    int ex, ey;
+    int dx = 0;
+    int dy = 0;
+    float dirX = 0;
+    float dirY = 0;
+
 public:
-    pattack(int _x, int _y, string filename) : entity(_x, _y, filename) {
+    pattack(int _x, int _y, int _ex, int _ey, string filename) : entity(_x, _y, filename) {
+        px = _x;
+        py = _y;
+        ex = _ex;
+        ey = _ey;
+        dx = (ex - px);
+        dy = (ey - py);
+        float length = std::sqrt(dx * dx + dy * dy);
+        if (length != 0) {
+            dirX = dx / length;
+            dirY = dy / length;
+        }
+
     }
 
-    void update(hero& player, int xmove, int ymove) {
-        //target and move towards closest enemy
+    void update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove) {
+        //target and move towards closest enemy x, y coords
         //keep target even if new target aquired.
         frameTimer++;
         if (frameTimer >= 5) {
@@ -129,18 +151,25 @@ public:
             if (n >= 8)
                 n = 0;
         }
-       
         image.load("Resources/shuriken" + std::to_string(n) + ".png"); //scrolls through 8 .png
+
+        x += dirX * speed;
+        y += dirY * speed;
+        
         if (xmove != 0)
             x += xmove; // changes movement of enemies when player moves away
         if (ymove != 0)
             y += ymove;
+        if (x < 0 || x > canvas.getWidth() || y < 0 || y > canvas.getHeight()) {
+            //delete projectile
+        }
     }
 };
 
 
 const unsigned int maxEnemies = 1000;
-const unsigned int maxProjectiles = 100;
+const unsigned int maxProjectiles = 100; //currently 100 max shots used, rather than on screen
+// possibly using stack and queue method to create a looping array
 
 class spawnManager {
     enemy* earray[maxEnemies];
@@ -149,8 +178,10 @@ class spawnManager {
     float spawnThreshold = 3.f;
     int currentSizeE = 0;
     float attackElapsed = 0;
-    float attackDelay = 3.f;
+    float attackDelay = 0.5f;
     int currentSizeA = 0;
+    float smallestDistance = 4e5;
+    int closestIndex = -1;
 
     //spawns enemies on the map, outside an area around the player
     void spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player) {
@@ -204,18 +235,25 @@ class spawnManager {
         }
     }
 
-    void spawnProjectile(GamesEngineeringBase::Window& canvas, hero& player) {
+    void spawnProjectile(GamesEngineeringBase::Window& canvas, hero& player, int targetIndex) {
         if (currentSizeA < maxProjectiles)
             if (attackElapsed > attackDelay) {
-                int x = player.getX();
-                int y = player.getY();
-                aarray[currentSizeA++] = new pattack(x, y, "Resources/shuriken0.png");
+                int x = player.getX() + 42;//minus image.height and width /2 to get centre
+                int y = player.getY() + 58;
+                int ex = 0;
+                int ey = 0;
+                if (targetIndex != -1) {
+                    ex = earray[targetIndex]->getX() + 42;
+                    ey = earray[targetIndex]->getY() + 58;
+                    aarray[currentSizeA++] = new pattack(x, y, ex, ey, "Resources/shuriken0.png");
+                }
                 attackElapsed = 0;
             }
     }
 
     void checkDeleteProjectile() {
         //if collision with any enemy - delete enemy and prohjectile
+        
     }
 
 public:
@@ -232,17 +270,26 @@ public:
     void update(GamesEngineeringBase::Window& canvas, hero& player, float dt, int xmove, int ymove) {
         timeElapsed += dt;
         attackElapsed += dt;
-        spawnProjectile(canvas, player);
+        spawnProjectile(canvas, player, closestIndex);
         spawnEnemy(canvas, player);
         for (int i = 0; i < currentSizeE; i++) {
             if (earray[i]) {
+                float dx = earray[i]->getX() - player.getX();
+                float dy = earray[i]->getY() - player.getY();
+                float dis2 = dx * dx + dy * dy;
+
+                if (dis2 < smallestDistance) {
+                    smallestDistance = dis2;
+                    closestIndex = i;
+                }
                 earray[i]->update(player, xmove, ymove);
                 checkDeleteEnemy(canvas, player, i);
             }
         }
         for (int i = 0; i < currentSizeA; i++) {
-            if (aarray[i]) {
-                aarray[i]->update(player, xmove, ymove);
+            if (aarray[i]) { 
+                aarray[i]->update(canvas, player, xmove, ymove);
+                checkDeleteProjectile();
             }
         }
     }
@@ -273,8 +320,10 @@ public:
 class GameManager {
     spawnManager sm;
     hero player;
+    world w;
     GamesEngineeringBase::Window& canvas;
     GamesEngineeringBase::Timer tim;
+
     //sets center map x,y
     int cx;
     int cy;
@@ -335,13 +384,14 @@ public:
     }
 
     void draw() {
-        for (unsigned int y = 0; y < 2000; y++)
+        /*for (unsigned int y = 0; y < 2000; y++)
             for (unsigned int x = 0; x < 2000; x++)
                 if (x + mapx > 0 && x + mapx < canvas.getWidth()) 
                     if (y + mapy > 0 && y + mapy < canvas.getHeight()) 
                         if (x % 50 == 0 && y % 50 == 0) 
-                            canvas.draw(x + mapx, y + mapy, 255, 255, 255);
-                       
+                            canvas.draw(x + mapx, y + mapy, 255, 255, 255);*/
+
+        w.draw(canvas, mapx, mapy);
         drawSquare(canvas, cx, cy);
         sm.draw(canvas);
         player.draw(canvas);
@@ -354,8 +404,10 @@ public:
 int main() {
     GamesEngineeringBase::Window canvas;
     canvas.create(1024, 768, "2dGame");
-   
+    srand(static_cast<unsigned int>(time(nullptr)));
     GameManager gm(canvas);
+
+   
     // Main game loop
     while (true)
     {

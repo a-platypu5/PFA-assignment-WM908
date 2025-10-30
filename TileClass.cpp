@@ -1,0 +1,17 @@
+#include <iostream>
+#include "TileClass.h"
+
+    tile::tile() {}
+    void tile::load(std::string filename) {
+        image.load(filename);
+    }
+    void tile::draw(GamesEngineeringBase::Window& canvas, int y, int x) {
+        for (unsigned int i = 0; i < 32; i++)
+            if (y + i > 0 && (y + i) < (canvas.getHeight()))
+                for (unsigned int n = 0; n < 32; n++)
+                    if (x + n > 0 && (x + n) < (canvas.getWidth()))
+                        canvas.draw(x + n, y + i, image.atUnchecked(n, i));
+    }
+    unsigned int tile::getHeight() { return 32; }
+    unsigned int tile::getWidth() { return 32; }
+    GamesEngineeringBase::Image& tile::getSprite() { return image; }
