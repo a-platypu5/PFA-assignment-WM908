@@ -1,9 +1,8 @@
 #ifndef TILESET_H
 #define TILESET_H
-#include "GamesEngineeringBase.h"
 #include "TileClass.h"
 
-const unsigned int tileNum = 3;
+const unsigned int tileNum = 4;
 class tileSet {
     tile t[tileNum];
     std::string string;
