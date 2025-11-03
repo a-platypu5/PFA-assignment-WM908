@@ -37,7 +37,7 @@ void spawnManager::spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player
 
             //cout << x << '\t' << y<< endl;
             //spawns enemy in heap array on an decreasing time interval to a min of 0.5f
-            earray[currentSizeE++] = new enemy(x, y, "Resources/L2.png");
+            earray[currentSizeE++] = new enemy(x, y, "Resources/Enemy1.png");
             timeElapsed = 0.f;
             spawnThreshold -= 0.2f;
             spawnThreshold = max(spawnThreshold, 0.5f);

@@ -16,6 +16,7 @@ public:
     int getWeightedTile(const float weights[tileNum]);
     int pickTileFromWeight(int indexi, int indexj);
     void draw(GamesEngineeringBase::Window& canvas, int _x, int _y);
+    void update(int& mapx, int& mapy);
     void print();
 };
 

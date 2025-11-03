@@ -47,8 +47,7 @@ void entity::drawCentre(GamesEngineeringBase::Window& canvas) {
  }
 
  bool entity::collision(entity& e) {
-     
-     if (&e != NULL) {
+     if (&e != NULL) { // null checking the entity to make sure the maths can complete
          int dx = x - e.x;
          int dy = y - e.y;
 
