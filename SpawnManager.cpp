@@ -11,12 +11,11 @@ void spawnManager::spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player
             int ry = rand() % canvas.getHeight();//mapy max
             int x;
             int y;
-            int safeRange = 250;
+            int safeRange= 250;
 
             //need to use a get funciton as the x, y is protected/private
-
-            int px = player.getX() + 83 / 2;//+ image. width
-            int py = player.getY() + 115 / 2; //+ image.height
+            int px = player.getX();
+            int py = player.getY();
 
             //cout << rx << '\t' << ry << endl;
             if (abs(rx - px) > safeRange || abs(ry - py) > safeRange) {
@@ -58,22 +57,38 @@ void spawnManager::checkDeleteEnemy(GamesEngineeringBase::Window& canvas, hero& 
 void spawnManager::spawnProjectile(GamesEngineeringBase::Window& canvas, hero& player, int targetIndex) {
     if (currentSizeA < maxProjectiles)
         if (attackElapsed > attackDelay) {
-            int x = player.getX() + 42;//minus image.height and width /2 to get centre
-            int y = player.getY() + 58;
+            int x = player.getX();
+            int y = player.getY();
             int ex = 0;
             int ey = 0;
-            if (targetIndex != -1) {
-                ex = earray[targetIndex]->getX() + 42;
-                ey = earray[targetIndex]->getY() + 58;
+            //std::cout << "closest target index: " << targetIndex << std::endl;
+            if (targetIndex != -1 && earray[targetIndex]) { // making sure target still exists during spawning of projectile
+                ex = earray[targetIndex]->getX();
+                ey = earray[targetIndex]->getY();
                 aarray[currentSizeA++] = new pattack(x, y, ex, ey, "Resources/shuriken0.png");
             }
             attackElapsed = 0;
         }
 }
 
-void spawnManager::checkDeleteProjectile() {
-    //if collision with any enemy - delete enemy and prohjectile
-
+void spawnManager::checkDeleteProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex) {
+    //if collision with any enemy - delete enemy and projectile
+    for(int i = 0; i < currentSizeE; i++)
+        if (aarray[projectileIndex]->collision(*earray[i])) {
+            delete aarray[projectileIndex];
+            aarray[projectileIndex] = nullptr;
+            std::cout << "enemy damaged" << std::endl;
+            delete earray[i];
+            earray[i] = nullptr;
+            break;
+        }
+    if (aarray[projectileIndex]) {
+        if (aarray[projectileIndex]->getX() > canvas.getWidth() || aarray[projectileIndex]->getX() < 0
+            || aarray[projectileIndex]->getY() > canvas.getHeight() || aarray[projectileIndex]->getY() < 0) {
+            delete aarray[projectileIndex];
+            aarray[projectileIndex] = nullptr;
+        }
+    }
 }
 
 spawnManager::spawnManager()
@@ -86,14 +101,16 @@ spawnManager::~spawnManager() {
         if (earray[i])
             delete earray[i];
     }
+    for (unsigned int j = 0; j < currentSizeA; j++) {
+        if (aarray[j])
+            delete aarray[j];
+    }
 }
 
     //calls enemy update and deletion
 void spawnManager::update(GamesEngineeringBase::Window& canvas, hero& player, float dt, int xmove, int ymove) {
     timeElapsed += dt;
     attackElapsed += dt;
-    spawnProjectile(canvas, player, closestIndex);
-    spawnEnemy(canvas, player);
     for (int i = 0; i < currentSizeE; i++) {
         if (earray[i]) {
             float dx = earray[i]->getX() - player.getX();
@@ -104,16 +121,19 @@ void spawnManager::update(GamesEngineeringBase::Window& canvas, hero& player, fl
                 smallestDistance = dis2;
                 closestIndex = i;
             }
-            earray[i]->update(player, xmove, ymove);
+            earray[i]->update(player, xmove, ymove, dt);
             checkDeleteEnemy(canvas, player, i);
         }
     }
+    smallestDistance = 4e5; // reset smallest distance to always detect new one each projectile
     for (int i = 0; i < currentSizeA; i++) {
         if (aarray[i]) {
-            aarray[i]->update(canvas, player, xmove, ymove);
-            checkDeleteProjectile();
+            aarray[i]->update(canvas, player, xmove, ymove, dt);
+            checkDeleteProjectile(canvas, player,  i);
         }
     }
+    spawnProjectile(canvas, player, closestIndex);
+    spawnEnemy(canvas, player);
 }
 
 void spawnManager::draw(GamesEngineeringBase::Window& canvas) {
@@ -126,14 +146,3 @@ void spawnManager::draw(GamesEngineeringBase::Window& canvas) {
         }
 }
 
-bool spawnManager::collision(hero& player) {
-    for (int i = 0; i < currentSizeE; i++) {
-        if (earray[i] != nullptr) {
-            if (earray[i]->collision(player)) {
-                std::cout << "Player collided" << std::endl;
-                return true;
-            }
-        }
-    }
-    return false;
-}

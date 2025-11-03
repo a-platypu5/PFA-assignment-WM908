@@ -8,7 +8,7 @@ public:
     enemy(int _x, int _y, std::string filename);
 
     //moves the enemy toward the player, but takes into account virtual player movement
-    void update(hero& player, int xmove, int ymove);
+    void update(hero& player, int xmove, int ymove, float dt);
 };
 
 #endif

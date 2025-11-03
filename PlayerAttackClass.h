@@ -15,7 +15,7 @@ class pattack : public entity {
 public:
     pattack(int _x, int _y, int _ex, int _ey, std::string filename);
 
-    void update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove);
+    void update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove, float dt);
 };
 
 #endif

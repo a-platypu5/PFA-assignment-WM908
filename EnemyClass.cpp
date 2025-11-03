@@ -6,10 +6,10 @@ enemy::enemy(int _x, int _y, std::string filename) : entity(_x, _y, filename), s
 }
 
     //moves the enemy toward the player, but takes into account virtual player movement
-void enemy::update(hero& player, int xmove, int ymove) {
+void enemy::update(hero& player, int xmove, int ymove, float dt) {
     int px = player.getX();
     int py = player.getY();
-    if (x > px + 20)//+- 20 avoids enemies flicxkering at higher speeds, and adds an area enemies target
+    if (x > px + 20)//+- 20 avoids enemies flickering at higher speeds, and adds an area enemies target
         x -= speed;
     else if (x < px - 20)
         x += speed;

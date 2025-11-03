@@ -54,20 +54,19 @@ void GameManager::update() {
 
     player.update(canvas, xpos, ypos);
     sm.update(canvas, player, dt, xmove, ymove);
-    sm.collision(player);
 }
 
 void GameManager::draw() {
-    for (unsigned int y = 0; y < 2000; y++)
+    /*for (unsigned int y = 0; y < 2000; y++)
         for (unsigned int x = 0; x < 2000; x++)
             if (x + mapx > 0 && x + mapx < canvas.getWidth())
                 if (y + mapy > 0 && y + mapy < canvas.getHeight())
                     if (x % 50 == 0 && y % 50 == 0)
-                        canvas.draw(x + mapx, y + mapy, 255, 255, 255);
+                        canvas.draw(x + mapx, y + mapy, 255, 255, 255);*/
 
     w.draw(canvas, mapx, mapy);
 
-    drawSquare(canvas, cx, cy);
+    //drawSquare(canvas, cx, cy);
     sm.draw(canvas);
     player.draw(canvas);
 }

@@ -18,7 +18,7 @@ pattack::pattack(int _x, int _y, int _ex, int _ey, std::string filename)
     }
 }
 
-void pattack::update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove) {
+void pattack::update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove, float dt) {
     //target and move towards closest enemy x, y coords
     //keep target even if new target aquired.
     frameTimer++;
@@ -32,12 +32,6 @@ void pattack::update(GamesEngineeringBase::Window& canvas, hero& player, int xmo
 
     x += dirX * speed;
     y += dirY * speed;
-
-    if (xmove != 0)
-        x += xmove; // changes movement of enemies when player moves away
-    if (ymove != 0)
-        y += ymove;
-    if (x < 0 || x > canvas.getWidth() || y < 0 || y > canvas.getHeight()) {
-        //delete projectile
-    }
+    x += xmove;
+    y += ymove;
 }

@@ -6,9 +6,9 @@ void tile::load(std::string filename) {
     image.load(filename);
 }
 void tile::draw(GamesEngineeringBase::Window& canvas, int y, int x) {
-    for (unsigned int i = 0; i < 32; i++)
+    for (unsigned int i = 0; i < image.height; i++)
         if (y + i > 0 && (y + i) < (canvas.getHeight()))
-            for (unsigned int n = 0; n < 32; n++)
+            for (unsigned int n = 0; n < image.width; n++)
                 if (x + n > 0 && (x + n) < (canvas.getWidth()))
                     canvas.draw(x + n, y + i, image.atUnchecked(n, i));
 }

@@ -2,7 +2,7 @@
 #define TILESET_H
 #include "TileClass.h"
 
-const unsigned int tileNum = 4;
+const unsigned int tileNum = 5;
 class tileSet {
     tile t[tileNum];
     std::string string;

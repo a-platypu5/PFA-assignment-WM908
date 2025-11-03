@@ -28,7 +28,7 @@ class spawnManager {
 
     void spawnProjectile(GamesEngineeringBase::Window& canvas, hero& player, int targetIndex);
 
-    void checkDeleteProjectile();
+    void checkDeleteProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex);
 
 public:
     spawnManager();
@@ -40,7 +40,6 @@ public:
 
     void draw(GamesEngineeringBase::Window& canvas);
 
-    bool collision(hero& player);
 };
 
 #endif
