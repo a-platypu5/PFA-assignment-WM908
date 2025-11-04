@@ -27,9 +27,15 @@ class GameManager {
     int mapx;
     int mapy;
     int speed;
+    int gameMode;
+    float totalTime;
+    float fps;
+    int frameCounter;
+    float fpsTimer;
 public:
     GameManager(GamesEngineeringBase::Window& win);
-    void update();
+    float averagefps(float dt);
+    bool update();
 
     void draw();
 };

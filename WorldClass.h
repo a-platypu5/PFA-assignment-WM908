@@ -10,6 +10,7 @@ class world {
     int LEFT;
     int ABOVE;
     float baseWeights[tileNum];
+    int mapType;
 public:
     world();
     ~world();
