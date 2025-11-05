@@ -24,8 +24,8 @@ class GameManager {
     float ypos;
     float smooth;
     int move;//speed of percieved player movement
-    int mapx;
-    int mapy;
+    float mapx;
+    float mapy;
     int speed;
     int gameMode;
     float totalTime;

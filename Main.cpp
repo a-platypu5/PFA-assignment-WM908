@@ -23,7 +23,6 @@ int main() {
         // Clear the window for the next frame rendering
         canvas.clear();
 
-        if (canvas.keyPressed(VK_ESCAPE)) break;
       
         running = gm.update();
         gm.draw();

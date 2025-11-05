@@ -72,17 +72,17 @@
         }
         return getWeightedTile(weights);
     }
-    void world::draw(GamesEngineeringBase::Window& canvas, int _x, int _y) {
+    void world::draw(GamesEngineeringBase::Window& canvas, float _x, float _y) {
         for (int i = 0; i < worldSizeX; i++)
             for (int j = 0; j < worldSizeY; j++) {
-                int x = (i * 32) + _x - (worldSizeX*32)/2;
-                int y = (j * 32) + _y - (worldSizeY*32)/2; 
+                float x = (i * 32) + _x - (worldSizeX*32)/2;
+                float y = (j * 32) + _y - (worldSizeY*32)/2; 
                 ts[tileMap[j][i]].draw(canvas, x, y);
             }
     }
     
     //shifts all the existing tiles up or down the array and inputs new tiles into the new emtpy array layer
-    void world::update(int& mapx, int& mapy) {
+    void world::update(float& mapx, float& mapy) {
         if (mapType == 2) {//may put another check in the gameManager update so this doesnt even get called
             if (mapx >= 32) {
                 mapx = 0;

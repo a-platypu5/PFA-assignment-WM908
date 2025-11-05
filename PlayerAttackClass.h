@@ -6,16 +6,18 @@ class pattack : public entity {
     int n;
     int frameTimer;
     int speed;
-    int px, py;
-    int ex, ey;
+    float px, py;
+    float ex, ey;
     int dx;
     int dy;
     float dirX;
     float dirY;
+    int attackDamage;
 public:
-    pattack(int _x, int _y, int _ex, int _ey, std::string filename);
+    pattack(float _x, float _y, float _ex, float _ey, std::string filename);
 
-    void update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove, float dt);
+    void update(GamesEngineeringBase::Window& canvas, hero& player, float xmove, float ymove, float dt);
+    int getAttackDamage();
 };
 
 #endif

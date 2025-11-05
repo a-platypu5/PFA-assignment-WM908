@@ -1,14 +1,20 @@
 #ifndef ENEMY_CLASS_H
 #define ENEMY_CLASS_H
 #include "HeroClass.h"
+#include "EntityClass.h"
 
 class enemy : public entity {
+protected:
     int speed;
+    int health;
 public:
-    enemy(int _x, int _y, std::string filename);
+    enemy(float _x, float _y, std::string filename);
 
     //moves the enemy toward the player, but takes into account virtual player movement
-    void update(hero& player, int xmove, int ymove, float dt);
+    void update(hero& player, float xmove, float ymove, float dt);
+
+    void takeDamage(int damage);
+    int getHealth();
 };
 
 #endif

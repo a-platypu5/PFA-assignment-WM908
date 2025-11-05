@@ -4,9 +4,9 @@
 
 class hero : public entity {
 public:
-    hero(int _x, int _y, std::string filename);
+    hero(float _x, float _y, std::string filename);
 
-    void update(GamesEngineeringBase::Window& canvas, int _x, float _y);
+    void update(GamesEngineeringBase::Window& canvas, float _x, float _y);
 };
 
 #endif

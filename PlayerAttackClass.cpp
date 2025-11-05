@@ -3,8 +3,8 @@
 #include "PlayerAttackClass.h"
 
 
-pattack::pattack(int _x, int _y, int _ex, int _ey, std::string filename)
-    : entity(_x, _y, filename), n(0), frameTimer(0), speed(8), dirX(0), dirY(0) {
+pattack::pattack(float _x, float _y, float _ex, float _ey, std::string filename)
+    : entity(_x, _y, filename), n(0), frameTimer(0), speed(500), dirX(0), dirY(0), attackDamage(35) {
     px = _x;
     py = _y;
     ex = _ex;
@@ -18,7 +18,7 @@ pattack::pattack(int _x, int _y, int _ex, int _ey, std::string filename)
     }
 }
 
-void pattack::update(GamesEngineeringBase::Window& canvas, hero& player, int xmove, int ymove, float dt) {
+void pattack::update(GamesEngineeringBase::Window& canvas, hero& player, float xmove, float ymove, float dt) {
     //target and move towards closest enemy x, y coords
     //keep target even if new target aquired.
     frameTimer++;
@@ -30,8 +30,10 @@ void pattack::update(GamesEngineeringBase::Window& canvas, hero& player, int xmo
     }
     image.load("Resources/shuriken" + std::to_string(n) + ".png"); //scrolls through 8 .png
 
-    x += dirX * speed;
-    y += dirY * speed;
-    x += xmove;
-    y += ymove;
+    x += dirX * speed * dt;
+    y += dirY * speed * dt;
+    x += xmove * dt;
+    y += ymove * dt;
 }
+
+int pattack::getAttackDamage() { return attackDamage; }

@@ -3,16 +3,16 @@
 
 #include "GamesEngineeringBase.h"
 
-void drawCircle(GamesEngineeringBase::Window& canvas, int cx, int cy, int radius);
+void drawCircle(GamesEngineeringBase::Window& canvas, float cx, float cy, int radius);
 
 class entity {
 protected:
-    int x;
-    int y;
+    float x;
+    float y;
     float radius;
     GamesEngineeringBase::Image image;
 public:
-    entity(int _x, int _y, std::string filename);
+    entity(float _x, float _y, std::string filename);
 
     float getX();
     float getY();

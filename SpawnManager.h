@@ -1,7 +1,7 @@
 #ifndef SPAWN_MANAGER
 #define SPAWN_MANAGER
 #include "HeroClass.h"
-#include "EnemyClass.h"
+#include "EnemySubclass.h"
 #include "PlayerAttackClass.h"
 
 const unsigned int maxEnemies = 1000;
@@ -28,6 +28,9 @@ class spawnManager {
 
     void spawnProjectile(GamesEngineeringBase::Window& canvas, hero& player, int targetIndex);
 
+    void shiftProjectileArray(int pi);
+    void shiftEnemyArray(int ei);
+
     void checkDeleteProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex);
 
 public:
@@ -36,7 +39,7 @@ public:
     ~spawnManager();
 
     //calls enemy update and deletion
-    void update(GamesEngineeringBase::Window& canvas, hero& player, float dt, int xmove, int ymove);
+    void update(GamesEngineeringBase::Window& canvas, hero& player, float dt, float xmove, float ymove);
 
     void draw(GamesEngineeringBase::Window& canvas);
 

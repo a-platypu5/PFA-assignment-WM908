@@ -1,7 +1,7 @@
 #include <iostream>
 #include "EntityClass.h"
 
-void drawCircle(GamesEngineeringBase::Window& canvas, int cx, int cy, int radius) {
+void drawCircle(GamesEngineeringBase::Window& canvas, float cx, float cy, int radius) {
     int r2 = radius * radius;
     for (int x = -radius; x < radius + 1; x++) {
         int y = sqrtf(r2 - (x * x));
@@ -14,7 +14,7 @@ void drawCircle(GamesEngineeringBase::Window& canvas, int cx, int cy, int radius
     }
 }
 
-entity::entity(int _x, int _y, std::string filename) {
+entity::entity(float _x, float _y, std::string filename) {
     image.load(filename);
     x = _x + (image.width / 2); // changes x and y to center of sprite
     y = _y + (image.height / 2);
@@ -51,7 +51,7 @@ void entity::drawCentre(GamesEngineeringBase::Window& canvas) {
          int dx = x - e.x;
          int dy = y - e.y;
 
-         float d = dx * dx + dy * dy;
+         int d = dx * dx + dy * dy;
          float r2 = radius + e.radius;
 
          return d < r2 * r2;

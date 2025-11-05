@@ -5,7 +5,7 @@ tile::tile() {}
 void tile::load(std::string filename) {
     image.load(filename);
 }
-void tile::draw(GamesEngineeringBase::Window& canvas, int x, int y) {
+void tile::draw(GamesEngineeringBase::Window& canvas, float x, float y) {
     for (unsigned int i = 0; i < image.height; i++)
         if (y + i > 0 && (y + i) < (canvas.getHeight()))
             for (unsigned int n = 0; n < image.width; n++)

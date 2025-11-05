@@ -7,7 +7,7 @@ class tile {
 public:
     tile();
     void load(std::string filename);
-    void draw(GamesEngineeringBase::Window& canvas, int x, int y);
+    void draw(GamesEngineeringBase::Window& canvas, float x, float y);
 
     unsigned int getHeight();
     unsigned int getWidth();

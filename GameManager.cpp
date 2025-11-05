@@ -3,7 +3,7 @@
 
 
 //draws the spawn restriction area
-void drawSquare(GamesEngineeringBase::Window& canvas, int cx, int cy) {
+void drawSquare(GamesEngineeringBase::Window& canvas, float cx, float cy) {
     int half = 250; // half the side length
     for (int x = cx - half; x <= cx + half; x++)
         for (int y = cy - half; y <= cy + half; y++)
@@ -15,7 +15,7 @@ void drawSquare(GamesEngineeringBase::Window& canvas, int cx, int cy) {
 
 GameManager::GameManager(GamesEngineeringBase::Window& win)
     : canvas(win), cx(win.getWidth() / 2), cy(win.getHeight() / 2), player(cx, cy, "Resources/Hero.png"),
-    tx(cx), ty(cy), xpos(cx), ypos(cy), smooth(0.01f), move(25), mapx(0), mapy(0), speed(4), gameMode(0), totalTime(0),
+    tx(cx), ty(cy), xpos(cx), ypos(cy), smooth(0.01f), move(25), mapx(0), mapy(0), speed(300), gameMode(0), totalTime(0),
     fps(0.0f), frameCounter(0), fpsTimer(0.0f){
 
     std::cout << "Please select which GameMode you want to play." << std::endl;
@@ -47,8 +47,10 @@ bool GameManager::update() {
     float dt = tim.dt();
     totalTime += dt;
     float fpsTEMP = averagefps(dt);
-    if (fpsTEMP != 0)
+    if (fpsTEMP != 0) {
         std::cout << fpsTEMP << std::endl;
+        std::cout << static_cast<int>(totalTime) << std::endl;
+    }
 
     if (gameMode == 2 || (gameMode == 1 && totalTime < 120)) {
 
@@ -62,23 +64,30 @@ bool GameManager::update() {
         if (canvas.keyPressed('W')) {
             ty -= move;
             ymove += speed;
-            mapy += speed;
+            mapy += speed * dt;
         }
         if (canvas.keyPressed('S')) {
             ty += move;
             ymove -= speed;
-            mapy -= speed;
+            mapy -= speed * dt;
         }
         if (canvas.keyPressed('A')) {
             tx -= move;
             xmove += speed;
-            mapx += speed;
+            mapx += speed * dt;
         }
         if (canvas.keyPressed('D')) {
             tx += move;
             xmove -= speed;
-            mapx -= speed;
+            mapx -= speed * dt;
         }
+        if (canvas.keyPressed(VK_ESCAPE)) {
+            std::cout << std::endl;
+            std::cout << "GAME OVER" << std::endl << std::endl;
+            std::cout << "You survived " << static_cast<int>(totalTime) / 60 << " minutes and " << static_cast<int>(totalTime) % 60 << " seconds." << std::endl;
+            return false;
+        }
+           
         //player smoothing movement
         xpos += (tx - xpos) * smooth;
         ypos += (ty - ypos) * smooth;
@@ -93,8 +102,9 @@ bool GameManager::update() {
             std::cout << "Congradulations, you made it to the 2 minute mark" << std::endl;
         }
         else if ((gameMode == 1 && totalTime < 120) || (gameMode == 2)) {
+            std::cout << std::endl;
             std::cout << "GAME OVER" << std::endl << std::endl;
-            std::cout << "You survived " << static_cast<int>(totalTime) / 60 << " minutes and " << static_cast<int>(totalTime) % 60 << std::endl;
+            std::cout << "You survived " << static_cast<int>(totalTime) / 60 << " minutes and " << static_cast<int>(totalTime) % 60 << " seconds." << std::endl;
         }
         return false;
     }
