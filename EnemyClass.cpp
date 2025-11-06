@@ -31,8 +31,8 @@ void enemy::update(hero& player, float xmove, float ymove, float dt) {
         x += xmove * dt; 
     if (ymove != 0)
         y += ymove * dt;
-
 }
+
 
 void enemy::takeDamage(int damage) {
     health -= damage;

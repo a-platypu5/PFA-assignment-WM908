@@ -12,11 +12,13 @@ protected:
     int attackDamage;
     float attackDelay;
     float attackElapsed;
+    std::string type;
 public:
     enemy(float _x, float _y, std::string filename);
 
     //moves the enemy toward the player, but takes into account virtual player movement
     void update(hero& player, float xmove, float ymove, float dt);
+
 
     void takeDamage(int damage);
     int getHealth();

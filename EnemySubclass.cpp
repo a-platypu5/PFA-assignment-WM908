@@ -1,7 +1,8 @@
 #include <iostream>
 #include "EnemySubclass.h"
+#include "SpawnManager.h"
 
-warrior::warrior(float _x, float _y, std::string filename) : enemy(_x, _y, filename) {
+warrior::warrior(spawnManager* sm, float _x, float _y, std::string filename, float px, float py, float dt) : enemy(_x, _y, filename), spawner(sm) {
 	speed = 200;
 	health = 100;
 	score = 10;
@@ -10,7 +11,7 @@ warrior::warrior(float _x, float _y, std::string filename) : enemy(_x, _y, filen
 	attackDelay = 0.5f;
 }
 
-rouge::rouge(float _x, float _y, std::string filename) : enemy(_x, _y, filename) {
+rouge::rouge(spawnManager* sm, float _x, float _y, std::string filename, float px, float py, float dt) : enemy(_x, _y, filename), spawner(sm) {
 	speed = 300;
 	health = 50;
 	score = 10;
@@ -19,19 +20,20 @@ rouge::rouge(float _x, float _y, std::string filename) : enemy(_x, _y, filename)
 	attackDelay = 0.2f;
 }
 
-ranger::ranger(float _x, float _y, std::string filename) : enemy(_x, _y, filename) {
+ranger::ranger(spawnManager* sm, float _x, float _y, std::string filename, float px, float py, float dt) : enemy(_x, _y, filename), spawner(sm) {
 	speed = 100;
 	health = 50;
 	score = 10;
 	attackRange = 150;
 	attackDamage = 20;
 	attackDelay = 0.3f;
+	type = "ranger";
 }
-void ranger::attack(GamesEngineeringBase::Window& canvas, hero& player, float dt, float xmove, float ymove) {
+//void ranger::attack(GamesEngineeringBase::Window& canvas, hero& player, float dt, float xmove, float ymove) {
+//
+//}
 
-}
-
-mage::mage(float _x, float _y, std::string filename) : enemy(_x, _y, filename) {
+mage::mage(spawnManager* sm, float _x, float _y, std::string filename, float px, float py, float dt) : enemy(_x, _y, filename), spawner(sm) {
 	speed = 50;
 	health = 25;
 	score = 10;
@@ -39,12 +41,16 @@ mage::mage(float _x, float _y, std::string filename) : enemy(_x, _y, filename) {
 	attackDamage = 50;
 	attackDelay = 0.8f;
 	attackElapsed = 0;
+	type = "mage";
+	x = _x;
+	y = _y;
+	attack(dt, px, py);
 
 }
-void mage::attack(GamesEngineeringBase::Window& canvas, hero& player, float dt, float xmove, float ymove) {
-}
-float mage::getAttackDelay() { return attackDelay; }
-float mage::getTimeElapsed() { return attackElapsed; }
-void mage::resetTimeElapsed() {
-	attackElapsed = 0;
+void mage::attack(float dt, float px, float py) {
+	attackElapsed += dt;
+	if (attackElapsed >= attackDelay) {
+		spawner->spawnEnemyProjectiles(x, y, px, py, type, attackDamage);
+			attackElapsed = 0;
+	}
 }

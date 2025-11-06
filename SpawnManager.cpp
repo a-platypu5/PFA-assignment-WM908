@@ -2,19 +2,19 @@
 #include "SpawnManager.h"
 
 
-struct Vec2 {
+struct position {
     int x;
     int y;
 };
 
 //spawns enemies on the map, outside an area around the player
-void spawnManager::spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player) {
+void spawnManager::spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player, float dt) {
     if (currentSizeE < maxEnemies) {
         if (timeElapsed > spawnThreshold) { // now zonal spawning outside canvas
             int area = rand() % 4;
-            Vec2 min{ 0, 0 };
-            Vec2 max{ canvas.getWidth(), canvas.getHeight()};
-            int x, y;
+            position min{ 0, 0 };
+            position max{ canvas.getWidth(), canvas.getHeight()};
+            float x, y;
             switch (area) {
             case 0: min.y = -100; max.y = 0; break;
             case 1: min.x = canvas.getWidth(); max.x = canvas.getWidth() + 100; break;
@@ -26,12 +26,13 @@ void spawnManager::spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player
             y = rand() % (abs(max.y - min.y)) + min.y;
 
             int subclass = rand() % 4;
-
+            float px = player.getX();
+            float py = player.getY();
             switch (subclass) {
-            case 0: earray[currentSizeE++] = new warrior(x, y, "Resources/Enemy1.png"); break;
-            case 1: earray[currentSizeE++] = new rouge(x, y, "Resources/Enemy2.png"); break;
-            case 2: earray[currentSizeE++] = new ranger(x, y, "Resources/Enemy3.png"); break;
-            case 3: earray[currentSizeE++] = new mage(x, y, "Resources/Enemy4.png"); break;
+            case 0: earray[currentSizeE++] = new warrior(this, x, y, "Resources/Enemy1.png", px, py, dt); break;
+            case 1: earray[currentSizeE++] = new rouge(this, x, y, "Resources/Enemy2.png", px, py, dt); break;
+            case 2: earray[currentSizeE++] = new ranger(this, x, y, "Resources/Enemy3.png", px, py, dt); break;
+            case 3: earray[currentSizeE++] = new mage(this, x, y, "Resources/Enemy4.png", px, py, dt); break;
             }
 
             timeElapsed = 0.f;
@@ -51,7 +52,7 @@ void spawnManager::checkDeleteEnemy(GamesEngineeringBase::Window& canvas, hero& 
     }
 }
 
-void spawnManager::spawnProjectile(GamesEngineeringBase::Window& canvas, hero& player, int targetIndex) {
+void spawnManager::spawnPlayerProjectile(GamesEngineeringBase::Window& canvas, hero& player, int targetIndex) {
     if (currentSizeA < maxProjectiles)
         if (attackElapsed > attackDelay) {
             float x = player.getX();
@@ -62,12 +63,14 @@ void spawnManager::spawnProjectile(GamesEngineeringBase::Window& canvas, hero& p
             if (targetIndex != -1 && earray[targetIndex]) { // making sure target still exists during spawning of projectile
                 ex = earray[targetIndex]->getX();
                 ey = earray[targetIndex]->getY();
-                aarray[currentSizeA++] = new pattack(x, y, ex, ey, "Resources/shuriken0.png");
+                aarray[currentSizeA++] = new pattack(x, y, ex, ey, "shuriken", 35);//player damage = 35
             }
             attackElapsed = 0;
         }
     //std::cout << currentSizeA << std::endl;
 }
+
+
 
 //makes sure the player doesnt run out of shots
 void spawnManager::shiftProjectileArray(int pI) {
@@ -93,6 +96,7 @@ void spawnManager::checkDeleteProjectile(GamesEngineeringBase::Window& canvas, h
 
             //std::cout << "enemy damaged" << std::endl;
             if (earray[i]->getHealth() <= 0) {
+                player.addScore(earray[i]->getScore());//add score of each enemy killed to total on player class
                 delete earray[i];
                 earray[i] = nullptr;
                 shiftEnemyArray(i);
@@ -115,7 +119,7 @@ void spawnManager::checkDeleteProjectile(GamesEngineeringBase::Window& canvas, h
 
 spawnManager::spawnManager()//smallest distance is for tracking the closest enemy target to shoot at
     : timeElapsed(0), spawnThreshold(3.0f), currentSizeE(0), attackElapsed(0),
-    attackDelay(0.5f), currentSizeA(0), smallestDistance(4e5), closestIndex(-1) {
+    attackDelay(0.5f), currentSizeA(0), smallestDistance(4e5), closestIndex(-1), currentSizeEP(0) {
 }
 
 spawnManager::~spawnManager() {
@@ -129,14 +133,22 @@ spawnManager::~spawnManager() {
     }
 }
 
+void spawnManager::spawnEnemyProjectiles(float _x, float _y, float px, float py, std::string type, int damage) {
+    if (currentSizeEP < maxProjectiles) {
+        eparray[currentSizeEP++] = new pattack(_x, _y, px, py, "Resources/" + type + "0.png", damage);
+    }
+}
+
     //calls enemy update and deletion
 void spawnManager::update(GamesEngineeringBase::Window& canvas, hero& player, float dt, float xmove, float ymove) {
     timeElapsed += dt;
-    attackElapsed += dt;
+    float px = player.getX();
+    float py = player.getY();
+    //attackElapsed += dt;
     for (int i = 0; i < currentSizeE; i++) {
         if (earray[i]) {
-            float dx = earray[i]->getX() - player.getX();
-            float dy = earray[i]->getY() - player.getY();
+            float dx = earray[i]->getX() - px;
+            float dy = earray[i]->getY() - py;
             float dis2 = dx * dx + dy * dy;
 
             if (dis2 < smallestDistance) {
@@ -148,14 +160,19 @@ void spawnManager::update(GamesEngineeringBase::Window& canvas, hero& player, fl
         }
     }
     smallestDistance = 4e5; // reset smallest distance to always detect new one each projectile
+    for (int i = 0; i < currentSizeEP; i++) {
+        if (eparray[i]) {
+            eparray[i]->update(canvas, xmove, ymove, dt);
+        }
+    }
     for (int i = 0; i < currentSizeA; i++) {
         if (aarray[i]) {
-            aarray[i]->update(canvas, player, xmove, ymove, dt);
+            aarray[i]->update(canvas, xmove, ymove, dt);
             checkDeleteProjectile(canvas, player,  i);
         }
     }
-    spawnProjectile(canvas, player, closestIndex);
-    spawnEnemy(canvas, player);
+    spawnPlayerProjectile(canvas, player, closestIndex);
+    spawnEnemy(canvas, player, dt);
 }
 
 void spawnManager::draw(GamesEngineeringBase::Window& canvas) {
