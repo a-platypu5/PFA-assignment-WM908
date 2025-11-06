@@ -7,6 +7,11 @@ class enemy : public entity {
 protected:
     int speed;
     int health;
+    int score;
+    int attackRange;
+    int attackDamage;
+    float attackDelay;
+    float attackElapsed;
 public:
     enemy(float _x, float _y, std::string filename);
 
@@ -15,6 +20,7 @@ public:
 
     void takeDamage(int damage);
     int getHealth();
+    int getScore();
 };
 
 #endif

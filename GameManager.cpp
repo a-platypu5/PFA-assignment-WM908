@@ -15,8 +15,10 @@ void drawSquare(GamesEngineeringBase::Window& canvas, float cx, float cy) {
 
 GameManager::GameManager(GamesEngineeringBase::Window& win)
     : canvas(win), cx(win.getWidth() / 2), cy(win.getHeight() / 2), player(cx, cy, "Resources/Hero.png"),
-    tx(cx), ty(cy), xpos(cx), ypos(cy), smooth(0.01f), move(25), mapx(0), mapy(0), speed(300), gameMode(0), totalTime(0),
+    tx(cx), ty(cy), xpos(cx), ypos(cy), smooth(0.01f), move(25), mapx(0), mapy(0), gameMode(0), totalTime(0),
     fps(0.0f), frameCounter(0), fpsTimer(0.0f){
+
+    speed = player.getSpeed();
 
     std::cout << "Please select which GameMode you want to play." << std::endl;
     std::cout << "GameMode 1: 2 Minute Timer" << '\t' << "GameMode 2: Endless Mode" << std::endl;
