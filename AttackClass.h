@@ -1,8 +1,8 @@
-#ifndef PLAYER_ATTACK_CLASS_H
-#define PLAYER_ATTACK_CLASS_H
+#ifndef ATTACK_CLASS_H
+#define ATTACK_CLASS_H
 #include "HeroClass.h"
 
-class pattack : public entity {
+class attack : public entity {
     int n;
     int frameTimer;
     int speed;
@@ -15,7 +15,7 @@ class pattack : public entity {
     int attackDamage;
     std::string entityType;
 public:
-    pattack(float _x, float _y, float _tx, float _ty, std::string filename, int damage);
+    attack(float _x, float _y, float _tx, float _ty, std::string filename, int damage);
 
     void update(GamesEngineeringBase::Window& canvas, float xmove, float ymove, float dt);
     int getAttackDamage();

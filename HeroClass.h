@@ -15,6 +15,7 @@ public:
     int getSpeed();
     int getScore();
     void addScore(int score);
+    void takeDamage(int damage);
 };
 
 #endif

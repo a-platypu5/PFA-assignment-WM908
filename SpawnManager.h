@@ -2,7 +2,7 @@
 #define SPAWN_MANAGER
 #include "HeroClass.h"
 #include "EnemySubclass.h"
-#include "PlayerAttackClass.h"
+#include "AttackClass.h"
 
 const unsigned int maxEnemies = 1000;
 const unsigned int maxProjectiles = 100; //currently 100 max shots used, rather than on screen
@@ -10,8 +10,8 @@ const unsigned int maxProjectiles = 100; //currently 100 max shots used, rather 
 
 class spawnManager {
     enemy* earray[maxEnemies];
-    pattack* aarray[maxProjectiles];
-    pattack* eparray[maxProjectiles];
+    attack* aarray[maxProjectiles];
+    attack* eparray[maxProjectiles];
     float timeElapsed;
     float spawnThreshold;
     int currentSizeE;
@@ -33,8 +33,11 @@ class spawnManager {
 
     void shiftProjectileArray(int pi);
     void shiftEnemyArray(int ei);
+    void shiftEPArray(int epi);
 
-    void checkDeleteProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex);
+    void checkDeletePlayerProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex);
+    void checkDeleteEnemyProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex);
+    void checkProjectileRange(GamesEngineeringBase::Window& canvas, int projectileIndex);
 
 public:
     spawnManager();

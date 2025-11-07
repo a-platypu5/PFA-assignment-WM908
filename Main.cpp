@@ -2,7 +2,7 @@
 #include "WorldClass.h"
 #include "HeroClass.h"
 #include "EnemyClass.h"
-#include "PlayerAttackClass.h"
+#include "AttackClass.h"
 #include "SpawnManager.h"
 #include "GameManager.h"
 

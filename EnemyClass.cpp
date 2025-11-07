@@ -31,7 +31,11 @@ void enemy::update(hero& player, float xmove, float ymove, float dt) {
         x += xmove * dt; 
     if (ymove != 0)
         y += ymove * dt;
+
+    attack(x, y, dt, px, py);
 }
+
+void enemy::attack(float x, float y, float dt, float px, float py) {}
 
 
 void enemy::takeDamage(int damage) {
@@ -40,3 +44,4 @@ void enemy::takeDamage(int damage) {
 
 int enemy::getHealth() { return health; }
 int enemy::getScore() { return score; }
+int enemy::getDamage() { return attackDamage; }

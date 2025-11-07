@@ -18,3 +18,12 @@ int hero::getScore() { return totalScore; }
 void hero::addScore(int score) {
     totalScore += score;
 }
+void hero::takeDamage(int damage) {
+    if (health >= (0 + damage)) {
+        health -= damage;
+    }
+    else {
+        health = 0;
+        std::cout << "PLAYER DIED" << std::endl;
+    }
+}

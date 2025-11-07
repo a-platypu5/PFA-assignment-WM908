@@ -36,7 +36,7 @@
     <ClInclude Include="EnemyClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerAttackClass.h">
+    <ClInclude Include="AttackClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SpawnManager.h">
@@ -71,7 +71,7 @@
     <ClCompile Include="EnemyClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAttackClass.cpp">
+    <ClCompile Include="AttackClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpawnManager.cpp">

@@ -19,10 +19,12 @@ public:
     //moves the enemy toward the player, but takes into account virtual player movement
     void update(hero& player, float xmove, float ymove, float dt);
 
+    virtual void attack(float _x, float _y, float dt, float px, float py);
 
     void takeDamage(int damage);
     int getHealth();
     int getScore();
+    int getDamage();
 };
 
 #endif

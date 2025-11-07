@@ -129,7 +129,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="HeroClass.h" />
-    <ClInclude Include="PlayerAttackClass.h" />
+    <ClInclude Include="AttackClass.h" />
     <ClInclude Include="SpawnManager.h" />
     <ClInclude Include="TileClass.h" />
     <ClInclude Include="TileSetClass.h" />
@@ -142,7 +142,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HeroClass.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="PlayerAttackClass.cpp" />
+    <ClCompile Include="AttackClass.cpp" />
     <ClCompile Include="SpawnManager.cpp" />
     <ClCompile Include="TileClass.cpp" />
     <ClCompile Include="TileSetClass.cpp" />

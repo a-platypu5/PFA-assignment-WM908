@@ -50,8 +50,8 @@ bool GameManager::update() {
     totalTime += dt;
     float fpsTEMP = averagefps(dt);
     if (fpsTEMP != 0) {
-        std::cout << fpsTEMP << std::endl;
-        std::cout << static_cast<int>(totalTime) << std::endl;
+        std::cout << "Current FPS: " << fpsTEMP << std::endl;
+        std::cout << "Time Elapsed: " << static_cast<int>(totalTime) << " Seconds" << std::endl;
     }
 
     if (gameMode == 2 || (gameMode == 1 && totalTime < 120)) {
@@ -87,6 +87,14 @@ bool GameManager::update() {
             std::cout << std::endl;
             std::cout << "GAME OVER" << std::endl << std::endl;
             std::cout << "You survived " << static_cast<int>(totalTime) / 60 << " minutes and " << static_cast<int>(totalTime) % 60 << " seconds." << std::endl;
+            std::cout << "You scored: " << player.getScore() << std::endl;
+            return false;
+        }
+        if (player.getHealth() <= 0) {
+            std::cout << std::endl;
+            std::cout << "GAME OVER, " << "YOU DIED" << std::endl << std::endl;
+            std::cout << "You survived " << static_cast<int>(totalTime) / 60 << " minutes and " << static_cast<int>(totalTime) % 60 << " seconds." << std::endl;
+            std::cout << "You scored: " << player.getScore() << std::endl;
             return false;
         }
            
@@ -102,11 +110,13 @@ bool GameManager::update() {
     else {
         if (gameMode == 1 && totalTime >= 120) {
             std::cout << "Congradulations, you made it to the 2 minute mark" << std::endl;
+            std::cout << "You scored: " << player.getScore() << std::endl;
         }
-        else if ((gameMode == 1 && totalTime < 120) || (gameMode == 2)) {
+        else if (gameMode == 1 && totalTime < 120) {
             std::cout << std::endl;
             std::cout << "GAME OVER" << std::endl << std::endl;
             std::cout << "You survived " << static_cast<int>(totalTime) / 60 << " minutes and " << static_cast<int>(totalTime) % 60 << " seconds." << std::endl;
+            std::cout << "You scored: " << player.getScore() << std::endl;
         }
         return false;
     }

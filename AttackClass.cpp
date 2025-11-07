@@ -1,9 +1,9 @@
 #include <string>
 #include <cmath>
-#include "PlayerAttackClass.h"
+#include "AttackClass.h"
 
 
-pattack::pattack(float _x, float _y, float _tx, float _ty, std::string type, int damage)
+attack::attack(float _x, float _y, float _tx, float _ty, std::string type, int damage)
     : entity(_x, _y, "Resources/" + type + "0.png"), n(0), frameTimer(0), speed(500), dirX(0), dirY(0), attackDamage(35) {
     ox = _x;
     oy = _y;
@@ -20,7 +20,7 @@ pattack::pattack(float _x, float _y, float _tx, float _ty, std::string type, int
     entityType = type;
 }
 
-void pattack::update(GamesEngineeringBase::Window& canvas, float xmove, float ymove, float dt) {
+void attack::update(GamesEngineeringBase::Window& canvas, float xmove, float ymove, float dt) {
     //target and move towards closest enemy x, y coords
     //keep target even if new target aquired.
     frameTimer++;
@@ -38,4 +38,4 @@ void pattack::update(GamesEngineeringBase::Window& canvas, float xmove, float ym
     y += ymove * dt;
 }
 
-int pattack::getAttackDamage() { return attackDamage; }
+int attack::getAttackDamage() { return attackDamage; }
