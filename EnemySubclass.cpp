@@ -3,7 +3,7 @@
 #include "SpawnManager.h"
 
 warrior::warrior(spawnManager* sm, float _x, float _y, std::string filename) : enemy(_x, _y, filename), spawner(sm) {
-	speed = 200;
+	speed = 150;
 	health = 100;
 	score = 10;
 	attackRange = 0;
@@ -12,7 +12,7 @@ warrior::warrior(spawnManager* sm, float _x, float _y, std::string filename) : e
 }
 
 rouge::rouge(spawnManager* sm, float _x, float _y, std::string filename) : enemy(_x, _y, filename), spawner(sm) {
-	speed = 300;
+	speed = 200;
 	health = 50;
 	score = 10;
 	attackRange = 0;

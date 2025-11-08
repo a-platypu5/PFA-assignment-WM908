@@ -15,23 +15,22 @@ class GameManager {
     GamesEngineeringBase::Timer tim;
 
     //sets center map x,y
-    int cx;
-    int cy;
+    int cx, cy;
     //controls slight player movement to feel more immersive
-    float tx;//target of player is centre by default
-    float ty;
-    float xpos;//xpos is the current xpos to draw the player
-    float ypos;
+    float tx, ty;//target of player is centre by default
+    float xpos, ypos;//xpos is the current xpos to draw the player
     float smooth;
     int move;//speed of percieved player movement
-    float mapx;
-    float mapy;
+    float mapx, mapy;
     int speed;
     int gameMode;
     float totalTime;
     float fps;
     int frameCounter;
     float fpsTimer;
+    bool isMapFixed;
+    float minMapx, maxMapx;
+    float minMapy, maxMapy;
 public:
     GameManager(GamesEngineeringBase::Window& win);
     float averagefps(float dt);

@@ -30,6 +30,12 @@ GameManager::GameManager(GamesEngineeringBase::Window& win)
     case 1: std::cout << "You have selected a 2 minute Timer" << std::endl << std::endl; break;
     case 2: std::cout << "You have selected an endless mode" << std::endl << std::endl; break;
     }
+
+    isMapFixed = w.isMapFixed();
+    minMapy = (worldSizeY / 2) * 32 + canvas.getHeight() / 2 - 32;
+    maxMapy = -1155;
+    minMapx = (worldSizeX / 2) * 32 + canvas.getWidth() / 2 - 56;
+    maxMapx = -1040;
 }
 
 float GameManager::averagefps(float dt) {
@@ -65,24 +71,60 @@ bool GameManager::update() {
         int ymove = 0;
 
         if (canvas.keyPressed('W')) {
-            ty -= move;
-            ymove += speed;
-            mapy += speed * dt;
+            if (!isMapFixed) {
+                mapy += speed * dt;
+                ty -= move;
+                ymove += speed;
+            }
+            else {
+                mapy = min(minMapy, (mapy + speed * dt));
+                if (mapy < minMapy - 64) {
+                    ty -= move;
+                    ymove += speed;
+                }
+            }
         }
         if (canvas.keyPressed('S')) {
-            ty += move;
-            ymove -= speed;
-            mapy -= speed * dt;
+            if (!isMapFixed) {
+                mapy -= speed * dt;
+                ty += move;
+                ymove -= speed;
+            }
+            else {
+                mapy = max(maxMapy, (mapy - speed * dt));
+                if (mapy > maxMapy + 64) {
+                    ty += move;
+                    ymove -= speed;
+                }
+            }
         }
         if (canvas.keyPressed('A')) {
-            tx -= move;
-            xmove += speed;
-            mapx += speed * dt;
+            if (!isMapFixed) {
+                mapx += speed * dt;
+                tx -= move;
+                xmove += speed;
+            }
+            else{
+                mapx = min(minMapx, (mapx + speed * dt));
+                if (mapx < minMapx - 64) {
+                    tx -= move;
+                    xmove += speed;
+                }
+             }
         }
         if (canvas.keyPressed('D')) {
-            tx += move;
-            xmove -= speed;
-            mapx -= speed * dt;
+            if (!isMapFixed) {
+                mapx -= speed * dt;
+                tx += move;
+                xmove -= speed;
+            }
+            else{
+                mapx = max(maxMapx, (mapx - speed * dt));
+                if (mapx > maxMapx + 64) {
+                    tx += move;
+                    xmove -= speed;
+                }
+            }
         }
         if (canvas.keyPressed('O')) {
             player.aoeAttack(canvas, dt);

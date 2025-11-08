@@ -8,10 +8,6 @@ public:
     tile();
     void load(std::string filename);
     void draw(GamesEngineeringBase::Window& canvas, float x, float y);
-
-    unsigned int getHeight();
-    unsigned int getWidth();
-    GamesEngineeringBase::Image& getSprite();
 };
 
 #endif

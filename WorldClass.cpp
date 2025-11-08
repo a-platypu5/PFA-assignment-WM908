@@ -1,7 +1,7 @@
 #include <iostream>
 #include "WorldClass.h"
 
-    world::world() : ts("tile"), LEFT(-1), ABOVE(-1), baseWeights{0.8f, 0.3f, 0.8f, 0.1f, 0.f}, mapType(0) {
+    world::world() : ts("tile"), LEFT(-1), ABOVE(-1), baseWeights{0.8f, 0.3f, 0.8f, 0.1f, 0.f}, mapType(0), fixedBorder(true) {
         tileMap = new unsigned int* [worldSizeX];
         for (int i = 0; i < worldSizeX; i++)
             tileMap[i] = new unsigned int[worldSizeY];
@@ -16,6 +16,8 @@
         case 1: std::cout << "You have selected a fixed border map type" << std::endl << std::endl; break;
         case 2: std::cout << "You have selected an infinite scroller map type" << std::endl << std::endl; break;
         }
+        if (mapType == 2)
+            fixedBorder = false;
 
         for (unsigned int i = 0; i < worldSizeX; i++)
             for (unsigned int j = 0; j < worldSizeY; j++) {
@@ -24,6 +26,7 @@
                 else if (mapType == 1 || mapType == 2)
                     tileMap[j][i] = pickTileFromWeight(i, j);
             }
+        //tileMap[(worldSizeY/2)+12][(worldSizeX/2)+15] = 0; //starting tile needs to be grass?
     }
 
     world::~world() {
@@ -128,3 +131,5 @@
             }
         }
     }
+
+    bool world::isMapFixed() { return fixedBorder; }

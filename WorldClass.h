@@ -11,6 +11,7 @@ class world {
     int ABOVE;
     float baseWeights[tileNum];
     int mapType;
+    bool fixedBorder;
 public:
     world();
     ~world();
@@ -19,6 +20,7 @@ public:
     void draw(GamesEngineeringBase::Window& canvas, float _x, float _y);
     void update(float& mapx, float& mapy);
     void print();
+    bool isMapFixed();
 };
 
 #endif

@@ -11,6 +11,3 @@ void tile::draw(GamesEngineeringBase::Window& canvas, float x, float y) {
                 if (x + n > 0 && (x + n) < (canvas.getWidth()))
                     canvas.draw(x + n, y + i, image.atUnchecked(n, i));
 }
-unsigned int tile::getHeight() { return 32; }
-unsigned int tile::getWidth() { return 32; }
-GamesEngineeringBase::Image& tile::getSprite() { return image; }
