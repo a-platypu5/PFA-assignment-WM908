@@ -42,8 +42,8 @@ void entity::drawCentre(GamesEngineeringBase::Window& canvas) {
                      if (image.alphaAtUnchecked(j, k) > 0)
                          canvas.draw(x + j - image.width/2, y + k - image.height/2, image.atUnchecked(j, k));
 
-     drawCircle(canvas, x, y, image.width / 3);
-     drawCentre(canvas);
+     //drawCircle(canvas, x, y, image.width / 3);
+     //drawCentre(canvas);
  }
 
  bool entity::collision(entity& e) {
