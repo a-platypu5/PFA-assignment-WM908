@@ -1,4 +1,3 @@
-#include <iostream>
 #include "TileClass.h"
 
 tile::tile() {}

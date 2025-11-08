@@ -14,10 +14,14 @@ class attack : public entity {
     float dirY;
     int attackDamage;
     std::string entityType;
+    float attackDuration;
+    bool durationEnded;
 public:
-    attack(float _x, float _y, float _tx, float _ty, std::string filename, int damage);
+    attack(float _x, float _y, float _tx, float _ty, std::string filename, int damage, float duration);
 
     void update(GamesEngineeringBase::Window& canvas, float xmove, float ymove, float dt);
+
+    bool hasDurationEnded();
     int getAttackDamage();
 };
 

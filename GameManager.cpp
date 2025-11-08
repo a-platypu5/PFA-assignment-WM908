@@ -14,7 +14,7 @@ void drawSquare(GamesEngineeringBase::Window& canvas, float cx, float cy) {
 
 
 GameManager::GameManager(GamesEngineeringBase::Window& win)
-    : canvas(win), cx(win.getWidth() / 2), cy(win.getHeight() / 2), player(cx, cy, "Resources/Hero.png"),
+    : canvas(win), cx(win.getWidth() / 2), cy(win.getHeight() / 2), sm(), player(&sm, cx, cy, "Resources/Hero.png"),
     tx(cx), ty(cy), xpos(cx), ypos(cy), smooth(0.01f), move(25), mapx(0), mapy(0), gameMode(0), totalTime(0),
     fps(0.0f), frameCounter(0), fpsTimer(0.0f){
 
@@ -53,6 +53,7 @@ bool GameManager::update() {
         std::cout << "Current FPS: " << fpsTEMP << std::endl;
         std::cout << "Time Elapsed: " << static_cast<int>(totalTime) << " Seconds" << std::endl;
     }
+    player.increaseTime(dt);
 
     if (gameMode == 2 || (gameMode == 1 && totalTime < 120)) {
 
@@ -82,6 +83,12 @@ bool GameManager::update() {
             tx += move;
             xmove -= speed;
             mapx -= speed * dt;
+        }
+        if (canvas.keyPressed('O')) {
+            player.aoeAttack(canvas, dt);
+        }
+        if (canvas.keyPressed('I')) {
+            player.setGodHealth();//sets player health to 10000
         }
         if (canvas.keyPressed(VK_ESCAPE)) {
             std::cout << std::endl;

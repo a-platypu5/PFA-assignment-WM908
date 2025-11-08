@@ -64,7 +64,7 @@ void spawnManager::spawnPlayerProjectile(GamesEngineeringBase::Window& canvas, h
             if (targetIndex != -1 && earray[targetIndex]) { // making sure target still exists during spawning of projectile
                 ex = earray[targetIndex]->getX();
                 ey = earray[targetIndex]->getY();
-                //aarray[currentSizeA++] = new attack(x, y, ex, ey, "shuriken", 35);//player damage = 35
+                aarray[currentSizeA++] = new attack(x, y, ex, ey, "shuriken", player.getDamage(), 0);//0 for duration of the attack
             }
             attackElapsed = 0;
         }
@@ -87,15 +87,20 @@ void spawnManager::shiftEnemyArray(int eI) {
     }
     currentSizeE--;
 }
-
 void spawnManager::shiftEPArray(int epI) {
     for (int i = epI; i < currentSizeEP - 1; i++) {
         eparray[i] = eparray[i + 1];
     }
     currentSizeEP--;
 }
+void spawnManager::shiftAOEArray(int aoeI) {
+    for (int i = aoeI; i < currentSizeA - 1; i++) {
+        eparray[i] = eparray[i + 1];
+    }
+    currentSizeA--;
+}
 
-void spawnManager::checkDeletePlayerProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex) {
+void spawnManager::checkDeletePlayerProjectile(hero& player, int projectileIndex) {
     //if collision with any enemy - damage enemy and delete projectile
     for(int i = 0; i < currentSizeE; i++)
         if (aarray[projectileIndex]->collision(*earray[i])) {
@@ -116,9 +121,8 @@ void spawnManager::checkDeletePlayerProjectile(GamesEngineeringBase::Window& can
         }
 }
 
-void spawnManager::checkDeleteEnemyProjectile(GamesEngineeringBase::Window& canvas, hero& player, int projectileIndex) {
+void spawnManager::checkDeleteEnemyProjectile(hero& player, int projectileIndex) {
     //if collision with any enemy - damage enemy and delete projectile
-    for (int i = 0; i < currentSizeEP; i++)
         if (eparray[projectileIndex]->collision(player)) {
             int damage = eparray[projectileIndex]->getAttackDamage();
             player.takeDamage(damage);
@@ -126,9 +130,32 @@ void spawnManager::checkDeleteEnemyProjectile(GamesEngineeringBase::Window& canv
             delete eparray[projectileIndex];
             eparray[projectileIndex] = nullptr;
             shiftEPArray(projectileIndex);
-            break;
         }
 }
+
+void spawnManager::deleteAOEProjectile(int projectileIndex) {
+    delete aoearray[projectileIndex];
+    aoearray[projectileIndex] = nullptr;
+    shiftAOEArray(projectileIndex);
+}
+
+void spawnManager::checkAOECollision(hero& player, int projectileIndex, float dt) {
+    int damage = aoearray[projectileIndex]->getAttackDamage();
+    for (int i = 0; i < currentSizeE; i++) {
+        if (aoearray[projectileIndex]->collision(*earray[i])) {
+            damage *= dt;
+            earray[i]->takeDamage(damage);
+
+            if (earray[i]->getHealth() <= 0) {
+                player.addScore(earray[i]->getScore());//add score of each enemy killed to total on player class
+                delete earray[i];
+                earray[i] = nullptr;
+                shiftEnemyArray(i);
+            }
+        }
+    }
+}
+
 
 //checks if projectiles leave canvas and deletes if they do
 void spawnManager::checkProjectileRange(GamesEngineeringBase::Window& canvas, int projectileIndex) {
@@ -172,8 +199,36 @@ spawnManager::~spawnManager() {
 
 void spawnManager::spawnEnemyProjectiles(float _x, float _y, float px, float py, std::string type, int damage) {
     if (currentSizeEP < maxProjectiles) {
-        eparray[currentSizeEP++] = new attack(_x, _y, px, py, type, damage);
+        eparray[currentSizeEP++] = new attack(_x, _y, px, py, type, damage, 0);//0 is duration of attack, nothing for this
     }
+}
+void spawnManager::spawnAOEProjectile(GamesEngineeringBase::Window& canvas, int damage, float duration, std::string type, float dt) {
+    if (currentSizeA < maxProjectiles) {
+            int healthyEnemy = 0;
+            int tempHealthy = 0;
+            int index = -1;
+            float tempx = 0;
+            float tempy = 0;
+            int canvasx = canvas.getWidth();
+            int canvasy = canvas.getHeight();
+            for (int i = 0; i < currentSizeE; i++) {
+                tempHealthy = earray[i]->getHealth();
+                tempx = earray[i]->getX();
+                tempy = earray[i]->getY();
+
+                if (tempHealthy > healthyEnemy && tempx > 0 && tempx < canvasx && tempy > 0 && tempy < canvasy) {
+                    healthyEnemy = tempHealthy;
+                    index = i;
+                }
+            }
+            if (index != -1) {
+                int _x = earray[index]->getX()-128;//64 is aoe image/2, centre the image on the enemy
+                int _y = earray[index]->getY()-128;
+                aoearray[currentSizeA] = new attack(_x, _y, _x, _y, type, damage, duration);
+                //std::cout << "aoe spawned at " << _x << '\t' << _y << std::endl;
+                currentSizeA++;
+            }
+        }
 }
 
     //calls enemy update and deletion
@@ -200,13 +255,22 @@ void spawnManager::update(GamesEngineeringBase::Window& canvas, hero& player, fl
     for (int i = 0; i < currentSizeEP; i++) {
         if (eparray[i]) {
             eparray[i]->update(canvas, xmove, ymove, dt);
-            checkDeleteEnemyProjectile(canvas, player, i);
+            checkDeleteEnemyProjectile(player, i);
         }
     }
     for (int i = 0; i < currentSizeA; i++) {
         if (aarray[i]) {
             aarray[i]->update(canvas, xmove, ymove, dt);
-            checkDeletePlayerProjectile(canvas, player,  i);
+            checkDeletePlayerProjectile(player,  i);
+        }
+    }
+    for (int i = 0; i < currentSizeA; i++) {
+        if (aoearray[i]) {
+            aoearray[i]->update(canvas, xmove, ymove, dt);
+            checkAOECollision(player, i, dt);
+            if (aoearray[i]->hasDurationEnded()) {
+                deleteAOEProjectile(i);
+            }
         }
     }
     spawnPlayerProjectile(canvas, player, closestIndex);
@@ -218,13 +282,13 @@ void spawnManager::draw(GamesEngineeringBase::Window& canvas) {
         if (earray[i])
             earray[i]->draw(canvas);
     for (unsigned int i = 0; i < currentSizeA; i++)
-        if (aarray[i]) {
+        if (aarray[i]) 
             aarray[i]->draw(canvas);
-        }
     for (unsigned int i = 0; i < currentSizeEP; i++)
-        if (eparray[i]) {
+        if (eparray[i]) 
             eparray[i]->draw(canvas);
-        }
-
+    for (unsigned int i = 0; i < currentSizeA; i++)
+        if (aoearray[i])
+            aoearray[i]->draw(canvas);
 }
 
