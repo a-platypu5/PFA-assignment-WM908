@@ -14,6 +14,8 @@ class world {
     bool fixedBorder;
 public:
     world();
+    world(const world&) = delete;
+    world& operator = (const world&) = delete;
     ~world();
     int getWeightedTile(const float weights[tileNum]);
     int pickTileFromWeight(int indexi, int indexj);

@@ -4,9 +4,6 @@
 #include "SpawnManager.h"
 #include "WorldClass.h"
 
-//draws the spawn restriction area
-void drawSquare(GamesEngineeringBase::Window& canvas, int cx, int cy);
-
 class GameManager {
     spawnManager sm;
     hero player;

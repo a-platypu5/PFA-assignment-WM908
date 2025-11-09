@@ -33,7 +33,7 @@ void attack::update(GamesEngineeringBase::Window& canvas, float xmove, float ymo
         if (n >= 8)
             n = 0;
     }
-    image.load("Resources/" + entityType + std::to_string(n) + ".png"); //scrolls through 8 .png
+   //image.load("Resources/" + entityType + std::to_string(n) + ".png"); //scrolls through 8 .png TANKS THE FPS
     if (entityType != "aoe") {
         x += dirX * speed * dt;
         y += dirY * speed * dt;

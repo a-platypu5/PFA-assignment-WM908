@@ -45,7 +45,8 @@ class spawnManager {
 
 public:
     spawnManager();
-
+    spawnManager(const spawnManager&) = delete;
+    spawnManager& operator = (const spawnManager&) = delete;
     ~spawnManager();
 
     void spawnEnemyProjectiles(float _x, float _y, float px, float py, std::string type, int damage);

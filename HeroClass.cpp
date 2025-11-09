@@ -6,8 +6,8 @@ hero::hero(spawnManager* sm, float _x, float _y, std::string filename) : entity(
     health = 1000;
     speed = 300;
     totalScore = 0;
-    damage = 35;
-    aoeDamage = 100; //damage over time
+    damage = 100;
+    aoeDamage = 300; //damage over time
     aoeDelay = 10.0f;
     aoeElapsed = 0;
     aoeDuration = 2.0f;

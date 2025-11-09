@@ -2,17 +2,6 @@
 #include "GameManager.h"
 
 
-//draws the spawn restriction area
-void drawSquare(GamesEngineeringBase::Window& canvas, float cx, float cy) {
-    int half = 250; // half the side length
-    for (int x = cx - half; x <= cx + half; x++)
-        for (int y = cy - half; y <= cy + half; y++)
-            // draw only the border
-            if (x == cx - half || x == cx + half || y == cy - half || y == cy + half)
-                canvas.draw(x, y, 255, 255, 255);
-}
-
-
 GameManager::GameManager(GamesEngineeringBase::Window& win)
     : canvas(win), cx(win.getWidth() / 2), cy(win.getHeight() / 2), sm(), player(&sm, cx, cy, "Resources/Hero.png"),
     tx(cx), ty(cy), xpos(cx), ypos(cy), smooth(0.01f), move(25), mapx(0), mapy(0), gameMode(0), totalTime(0),
@@ -78,7 +67,7 @@ bool GameManager::update() {
             }
             else {
                 mapy = min(minMapy, (mapy + speed * dt));
-                if (mapy < minMapy - 64) {
+                if (mapy < minMapy - 64) {//64 to prevent the edge of the sprite clipping into the wall.
                     ty -= move;
                     ymove += speed;
                 }

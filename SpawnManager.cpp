@@ -78,6 +78,7 @@ void spawnManager::shiftProjectileArray(int pI) {
     for (int i = pI; i < currentSizeA - 1; i++) {
         aarray[i] = aarray[i + 1];
     }
+    aarray[currentSizeA - 1] = nullptr;
     currentSizeA--;
 }
 //shifts enemies, so the continue spawning until 1000 on screen
@@ -85,18 +86,21 @@ void spawnManager::shiftEnemyArray(int eI) {
     for (int i = eI; i < currentSizeE - 1; i++) {
         earray[i] = earray[i + 1];
     }
+    earray[currentSizeE - 1] = nullptr;
     currentSizeE--;
 }
 void spawnManager::shiftEPArray(int epI) {
     for (int i = epI; i < currentSizeEP - 1; i++) {
         eparray[i] = eparray[i + 1];
     }
+    eparray[currentSizeEP - 1] = nullptr;
     currentSizeEP--;
 }
 void spawnManager::shiftAOEArray(int aoeI) {
     for (int i = aoeI; i < currentSizeA - 1; i++) {
-        eparray[i] = eparray[i + 1];
+        aoearray[i] = aoearray[i + 1];
     }
+    eparray[currentSizeA - 1] = nullptr;
     currentSizeA--;
 }
 
@@ -123,14 +127,15 @@ void spawnManager::checkDeletePlayerProjectile(hero& player, int projectileIndex
 
 void spawnManager::checkDeleteEnemyProjectile(hero& player, int projectileIndex) {
     //if collision with any enemy - damage enemy and delete projectile
-        if (eparray[projectileIndex]->collision(player)) {
-            int damage = eparray[projectileIndex]->getAttackDamage();
-            player.takeDamage(damage);
+    if (eparray[projectileIndex]->collision(player)) {
+        int damage = eparray[projectileIndex]->getAttackDamage();
+        player.takeDamage(damage);
+        std::cout << "Player damaged, current health: " << player.getHealth() << std::endl;
 
-            delete eparray[projectileIndex];
-            eparray[projectileIndex] = nullptr;
-            shiftEPArray(projectileIndex);
-        }
+        delete eparray[projectileIndex];
+        eparray[projectileIndex] = nullptr;
+        shiftEPArray(projectileIndex);
+    }
 }
 
 void spawnManager::deleteAOEProjectile(int projectileIndex) {
@@ -183,8 +188,8 @@ void spawnManager::checkEnemyRange(GamesEngineeringBase::Window& canvas, int ind
         float y = earray[index]->getY();
         float canvasW = canvas.getWidth();
         float canvasH = canvas.getHeight();
-        if (x > canvasW*2 || x < 0 - canvasW
-            || y > canvasH*2 || y < 0 - canvasH){
+        if (x > canvasW * 2 || x < 0 - canvasW
+            || y > canvasH * 2 || y < 0 - canvasH) {
             delete earray[index];
             earray[index] = nullptr;
             shiftEnemyArray(index);
@@ -193,7 +198,7 @@ void spawnManager::checkEnemyRange(GamesEngineeringBase::Window& canvas, int ind
 }
 
 spawnManager::spawnManager()//smallest distance is for tracking the closest enemy target to shoot at
-    : timeElapsed(0), spawnThreshold(3.0f), currentSizeE(0), attackElapsed(0),
+    : timeElapsed(0), spawnThreshold(1.5f), currentSizeE(0), attackElapsed(0),
     attackDelay(0.5f), currentSizeA(0), smallestDistance(4e5), closestIndex(-1), currentSizeEP(0) {
 }
 
@@ -210,6 +215,14 @@ spawnManager::~spawnManager() {
         if (eparray[k])
             delete eparray[k];
     }
+    for (unsigned int l = 0; l < currentSizeA; l++) {
+        if (aoearray[l])
+            delete aoearray[l];
+    }
+    delete[] earray;
+    delete[] aarray;
+    delete[] eparray;
+    delete[] aoearray;
 }
 
 void spawnManager::spawnEnemyProjectiles(float _x, float _y, float px, float py, std::string type, int damage) {
@@ -239,9 +252,8 @@ void spawnManager::spawnAOEProjectile(GamesEngineeringBase::Window& canvas, int 
             if (index != -1) {
                 int _x = earray[index]->getX()-128;//64 is aoe image/2, centre the image on the enemy
                 int _y = earray[index]->getY()-128;
-                aoearray[currentSizeA] = new attack(_x, _y, _x, _y, type, damage, duration);
+                aoearray[currentSizeA++] = new attack(_x, _y, _x, _y, type, damage, duration);
                 //std::cout << "aoe spawned at " << _x << '\t' << _y << std::endl;
-                currentSizeA++;
             }
         }
 }
