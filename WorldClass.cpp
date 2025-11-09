@@ -46,7 +46,7 @@
         }
         return 0;
     }
-    int world::pickTileFromWeight(int indexi, int indexj) {
+    int world::pickTileFromWeight(int indexi, int indexj) {//adjusts tile weights depending on surrounding tiles
         float weights[tileNum];
         for (int i = 0; i < tileNum; i++)
             weights[i] = baseWeights[i];

@@ -7,7 +7,6 @@ struct position {
     int y;
 };
 
-//spawns enemies on the map, outside an area around the player
 void spawnManager::spawnEnemy(GamesEngineeringBase::Window& canvas, hero& player, float dt) {
     if (currentSizeE < maxEnemies) {
         if (timeElapsed > spawnThreshold) { // now zonal spawning outside canvas

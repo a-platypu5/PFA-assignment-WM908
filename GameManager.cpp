@@ -20,7 +20,7 @@ GameManager::GameManager(GamesEngineeringBase::Window& win)
     case 2: std::cout << "You have selected an endless mode" << std::endl << std::endl; break;
     }
 
-    isMapFixed = w.isMapFixed();
+    isMapFixed = w.isMapFixed();//basic way of limiting player movement to a set boundary
     minMapy = (worldSizeY / 2) * 32 + canvas.getHeight() / 2 - 32;
     maxMapy = -1155;
     minMapx = (worldSizeX / 2) * 32 + canvas.getWidth() / 2 - 56;
