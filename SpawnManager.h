@@ -41,6 +41,7 @@ class spawnManager {
     void deleteAOEProjectile(int projectileIndex);
     void checkAOECollision(hero& player, int projectileIndex, float dt);
     void checkProjectileRange(GamesEngineeringBase::Window& canvas, int projectileIndex);
+    void checkEnemyRange(GamesEngineeringBase::Window& canvas, int index);
 
 public:
     spawnManager();

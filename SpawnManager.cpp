@@ -176,6 +176,21 @@ void spawnManager::checkProjectileRange(GamesEngineeringBase::Window& canvas, in
         }
     }
 }
+//deletes enemies outside double the camera width and height
+void spawnManager::checkEnemyRange(GamesEngineeringBase::Window& canvas, int index) {
+    if (earray[index]) {
+        float x = earray[index]->getX();
+        float y = earray[index]->getY();
+        float canvasW = canvas.getWidth();
+        float canvasH = canvas.getHeight();
+        if (x > canvasW*2 || x < 0 - canvasW
+            || y > canvasH*2 || y < 0 - canvasH){
+            delete earray[index];
+            earray[index] = nullptr;
+            shiftEnemyArray(index);
+        }
+    }
+}
 
 spawnManager::spawnManager()//smallest distance is for tracking the closest enemy target to shoot at
     : timeElapsed(0), spawnThreshold(3.0f), currentSizeE(0), attackElapsed(0),
@@ -199,7 +214,7 @@ spawnManager::~spawnManager() {
 
 void spawnManager::spawnEnemyProjectiles(float _x, float _y, float px, float py, std::string type, int damage) {
     if (currentSizeEP < maxProjectiles) {
-        eparray[currentSizeEP++] = new attack(_x, _y, px, py, type, damage, 0);//0 is duration of attack, nothing for this
+        eparray[currentSizeEP++] = new attack(_x, _y, px, py, type, damage, 0);//0 is duration of attack, nothing for this attack
     }
 }
 void spawnManager::spawnAOEProjectile(GamesEngineeringBase::Window& canvas, int damage, float duration, std::string type, float dt) {
@@ -238,6 +253,7 @@ void spawnManager::update(GamesEngineeringBase::Window& canvas, hero& player, fl
     float py = player.getY();
     attackElapsed += dt;
     for (int i = 0; i < currentSizeE; i++) {
+        checkEnemyRange(canvas, i);
         if (earray[i]) {
             float dx = earray[i]->getX() - px;
             float dy = earray[i]->getY() - py;
