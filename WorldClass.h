@@ -12,11 +12,13 @@ class world {
     float baseWeights[tileNum];
     int mapType;
     bool fixedBorder;
+    char isLoad;
 public:
     world();
     world(const world&) = delete;
     world& operator = (const world&) = delete;
     ~world();
+    void loadWorld(unsigned int** tilemap);
     int getWeightedTile(const float weights[tileNum]);
     int pickTileFromWeight(int indexi, int indexj);
     void draw(GamesEngineeringBase::Window& canvas, float _x, float _y);

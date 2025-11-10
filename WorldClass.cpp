@@ -1,7 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include "WorldClass.h"
 
-    world::world() : ts("tile"), LEFT(-1), ABOVE(-1), baseWeights{0.8f, 0.3f, 0.8f, 0.1f, 0.f}, mapType(0), fixedBorder(true) {
+    world::world() : ts("tile"), LEFT(-1), ABOVE(-1), baseWeights{0.8f, 0.3f, 0.8f, 0.1f, 0.f}, mapType(0), isLoad('p'), fixedBorder(true) {
         tileMap = new unsigned int* [worldSizeX];
         for (int i = 0; i < worldSizeX; i++)
             tileMap[i] = new unsigned int[worldSizeY];
@@ -18,19 +19,43 @@
         }
         if (mapType == 2)
             fixedBorder = false;
-
-        for (unsigned int i = 0; i < worldSizeX; i++)
-            for (unsigned int j = 0; j < worldSizeY; j++) {
-                if (mapType == 1 && (i == 0 || j == 0 || i == (worldSizeX - 1) || j == (worldSizeY - 1)))
+        while (isLoad != 'y' && isLoad != 'n') {
+            std::cout << "Please select if you wish to load the map from a world.txt, y/n: " << std::endl;
+            std::cin >> isLoad;
+        }
+        
+        if (isLoad == 'y') {
+            loadWorld(tileMap);
+        }
+        if (isLoad == 'n') {
+            for (unsigned int i = 0; i < worldSizeX; i++)
+                for (unsigned int j = 0; j < worldSizeY; j++) {
+                    if (mapType == 1 && (i == 0 || j == 0 || i == (worldSizeX - 1) || j == (worldSizeY - 1)))
                         tileMap[j][i] = 4;
-                else if (mapType == 1 || mapType == 2)
-                    tileMap[j][i] = pickTileFromWeight(i, j);
-            }
+                    else if (mapType == 1 || mapType == 2)
+                        tileMap[j][i] = pickTileFromWeight(i, j);
+                }
+        }
+            
         //tileMap[(worldSizeY/2)+12][(worldSizeX/2)+15] = 0; //starting tile needs to be grass?
     }
 
     world::~world() {
         delete[] tileMap;
+    }
+    void world::loadWorld(unsigned int** tilemap) {
+        std::ifstream map("world.txt");
+        if (!map.is_open()) {
+            std::cout << "Error loading map!" << std::endl;
+            isLoad = 'n';
+            return;
+        }
+        for (int i = 0; i < worldSizeX; i++)
+            for (int j = 0; j < worldSizeY; j++) {
+                map >> tilemap[j][i];
+            }
+
+        map.close();
     }
     int world::getWeightedTile(const float weights[tileNum]) {
         float total = 0.0f;

@@ -12,7 +12,7 @@ GameManager::GameManager(GamesEngineeringBase::Window& win)
     std::cout << "Please select which GameMode you want to play." << std::endl;
     std::cout << "GameMode 1: 2 Minute Timer" << '\t' << "GameMode 2: Endless Mode" << std::endl;
     while (gameMode != 1 && gameMode != 2) {
-        std::cout << "Type '1' for fixed, or '2' for infinite:" << std::endl;
+        std::cout << "Type '1' for timed, or '2' for endless:" << std::endl;
         std::cin >> gameMode;
     }
     switch (gameMode) {
